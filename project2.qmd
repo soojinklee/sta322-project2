@@ -1,26 +1,197 @@
 ---
-title: "STA 322 Study Design: Project 2"
+title: "STA 322 — Project 2: Paper Helicopter Experiment"
 author: "Seunghyun Jin and Soojin Lee"
-format: pdf
+date: "December 4, 2026"
+output:
+  html_document:
+    toc: true
+    number_sections: true
 ---
 
-## Quarto
+# Objective
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+The goal of this randomized experiment is to identify which paper-helicopter design factors are associated with longer flight times, determine whether the effect of rotor length depends on leg width, and recommend a combination of factor settings that maximizes flight time. The response is **flight time (seconds)**, measured from release until the helicopter first touches the floor.
 
-## Running Code
+# Experimental Design
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+## Factors and settings
 
-```{r}
-1 + 1
+We use the four factors and levels specified in the project instructions.
+
+| Factor | Low (−1) | High (+1) |
+|:--|:--|:--|
+| Rotor length | 7.5 cm | 8.5 cm |
+| Leg length | 7.5 cm | 12.0 cm |
+| Leg width | 3.2 cm | 5.0 cm |
+| Paper clip | No | Yes |
+
+We use a **$2^4$ full factorial design**: all 16 combinations of the four factors. We will make **four independently constructed helicopters for each combination**, for **64 helicopters and 64 flights total**. Each helicopter will be flown once. Having independent helicopters at each condition allows construction variation to contribute to the uncertainty estimates and avoids treating repeated drops of a single helicopter as independent replicates.
+
+**Why this design?** A full factorial design enables comparison of each factor at both levels while averaging over the other factors. It also permits estimation of the **rotor length × leg width interaction**, directly addressing the second research question. Four independent flights per combination follow the assignment's recommended minimum. The design is balanced, so the factors are not confounded with one another.
+
+## Randomization and flight procedure
+
+1. Generate the 64-run schedule using the code in the appendix **before** making or dropping helicopters. Save it as `helicopter_schedule.csv`.
+2. Construct one helicopter for each row of the schedule using the assigned factor settings and the provided construction instructions. Label each helicopter with its `run_id`.
+3. Conduct the flights in the randomized `run_order` given in the schedule. Do not reorder runs based on the factor settings.
+4. Drop every helicopter from approximately **6 feet** above the same floor surface, using the same release technique and location. Keep paper type, paper weight, body length (2 cm), fold angles, paper-clip type, and timing method consistent.
+5. Record the elapsed time, in seconds, from release until first floor contact. Use the same stopwatch/timing procedure throughout. Record any deviations or unusual flight behavior in `notes`.
+6. Enter the flight times in the schedule and save the completed data as **`helicopter_data.csv`**. Do not delete observations just because a flight is unexpectedly short or long; document mishaps and any pre-specified criteria for excluding invalid trials.
+
+**Potential sources of error:** small differences in construction, release technique, air currents, and stopwatch reaction time. Randomizing the run order helps distribute time-related influences across conditions; standardized construction and dropping help reduce variability. The experiment supports causal comparisons of the **assigned factor levels under these testing conditions**, not necessarily every possible helicopter design or drop height.
+
+# Analysis Plan
+
+We will summarize the mean flight time for each of the 16 design combinations and calculate a 95% confidence interval for each condition mean. For the primary analysis, we will use a linear model with all four main effects and the **rotor length × leg width** interaction:
+
+$$
+Y_i = \beta_0 + \beta_R R_i + \beta_L L_i + \beta_W W_i +
+\beta_C C_i + \beta_{RW}(R_iW_i) + \varepsilon_i,
+$$
+
+where $R,L,W,C\in\{-1,+1\}$ code the factor levels and $Y_i$ is flight time in seconds. With this coding, a factor's average **high-minus-low effect** is $2\beta$ for a main effect, and the difference in rotor effects between high and low leg width is $4\beta_{RW}$. We will report these estimates with 95% confidence intervals and use the rotor-by-width interaction to answer Question 2. We will also inspect residual plots to assess the model's constant-variance and approximate-normality assumptions.
+
+The specified model focuses on the main effects and the interaction requested in the assignment. If the diagnostics show substantial problems or other interactions appear important, we will discuss that limitation rather than treating the model as automatically adequate.
+
+# Results
+
+**Complete this section after collecting the flight-time data and running the code in the appendix. Do not insert invented values.**
+
+## Question 1: Which factors are most important for longer flights?
+
+[INSERT: A table of estimated high-minus-low main effects, their 95% confidence intervals, and a comparison of effect magnitudes. Explain which factors have the largest effects, their directions, and whether intervals include zero. Note that effects are averaged across the tested levels of the other factors; if the interaction is sizable, interpret the rotor effect separately by leg width.]
+
+## Question 2: Does the effect of rotor length differ by leg width?
+
+[INSERT: The estimated difference-in-differences for rotor length × leg width, its 95% confidence interval, and an interpretation in seconds. State whether the interval includes zero. Include or discuss the interaction plot.]
+
+## Question 3: What design combination do we recommend?
+
+[INSERT: The recommended rotor length, leg length, leg width, and paper-clip setting. Support the recommendation with the observed mean flight times for the best-performing combination(s), 95% confidence intervals, and the fitted-model predictions where useful. Explain any trade-off between observed and model-estimated performance and acknowledge uncertainty, especially when top designs are close.]
+
+## Model diagnostics and limitations
+
+[INSERT: Brief discussion of the residual-vs-fitted plot, normal Q–Q plot, outliers/unequal spread if any, timing error, and limitations of testing only two levels per factor. State whether your findings are reliable within the settings studied.]
+
+# Conclusion
+
+[INSERT: A short paragraph directly answering all three project questions with numerical support, and state that the recommendation applies to the tested levels and drop procedure.]
+
+# Appendix: R Code
+
+The code below first generates the randomized schedule. **Run the schedule-generation chunk only once before data collection**; running it again could replace the original randomization. Then fill in the `flight_time` column and save the file as `helicopter_data.csv`. The analysis chunks will run after that file is available in the same folder as this R Markdown file.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
-You can add options to executable code like this
+## A. Generate the randomized 64-flight schedule
 
-```{r}
-#| echo: false
-2 * 2
+```{r make-schedule, eval=FALSE}
+# RUN ONCE, BEFORE DATA COLLECTION.
+set.seed(322)
+conditions <- expand.grid(
+  rotor_cm = c(7.5, 8.5),
+  leg_length_cm = c(7.5, 12),
+  leg_width_cm = c(3.2, 5),
+  paperclip = c("No", "Yes"),
+  replicate = 1:4
+)
+conditions$run_id <- seq_len(nrow(conditions))
+conditions$run_order <- sample(seq_len(nrow(conditions)))
+conditions$flight_time <- NA_real_
+conditions$notes <- ""
+conditions <- conditions[order(conditions$run_order),
+                         c("run_order", "run_id", "rotor_cm",
+                           "leg_length_cm", "leg_width_cm", "paperclip",
+                           "replicate", "flight_time", "notes")]
+write.csv(conditions, "helicopter_schedule.csv", row.names = FALSE)
+print(conditions)
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+## B. Read and check the completed data
+
+```{r load-data, eval=FALSE}
+d <- read.csv("helicopter_data.csv", stringsAsFactors = FALSE)
+stopifnot(nrow(d) == 64, !anyNA(d$flight_time),
+          is.numeric(d$flight_time), all(d$flight_time > 0))
+stopifnot(all(table(interaction(d$rotor_cm, d$leg_length_cm,
+                              d$leg_width_cm, d$paperclip)) == 4))
+
+# Effects coding, using the levels given in the instructions.
+d$R <- ifelse(d$rotor_cm == 8.5, 1, -1)
+d$L <- ifelse(d$leg_length_cm == 12, 1, -1)
+d$W <- ifelse(d$leg_width_cm == 5, 1, -1)
+d$C <- ifelse(d$paperclip == "Yes", 1, -1)
+```
+
+## C. Descriptive statistics and 95% confidence intervals
+
+```{r descriptive-results, eval=FALSE}
+cell <- aggregate(flight_time ~ rotor_cm + leg_length_cm +
+                    leg_width_cm + paperclip, data = d,
+                  FUN = function(x) c(n = length(x), mean = mean(x),
+                                       sd = sd(x)))
+cell <- data.frame(cell[1:4], cell$flight_time)
+cell$se <- cell$sd / sqrt(cell$n)
+cell$lower95 <- cell$mean - qt(.975, df = cell$n - 1) * cell$se
+cell$upper95 <- cell$mean + qt(.975, df = cell$n - 1) * cell$se
+cell <- cell[order(-cell$mean), ]
+print(cell, row.names = FALSE)
+```
+
+## D. Estimate main effects and rotor-by-width interaction
+
+```{r model-results, eval=FALSE}
+fit <- lm(flight_time ~ R + L + W + C + R:W, data = d)
+summary(fit)
+
+# Convert regression coefficients to effects in seconds.
+# R, L, W, C: average high-minus-low differences (2 * coefficient).
+# R:W: difference of rotor effects (high width minus low width) (4 * coefficient).
+coef_table <- summary(fit)$coefficients
+ci <- confint(fit, level = 0.95)
+effect_names <- c("R", "L", "W", "C", "R:W")
+multipliers <- c(2, 2, 2, 2, 4)
+effects <- data.frame(
+  effect = c("Rotor length (high - low)", "Leg length (high - low)",
+             "Leg width (high - low)", "Paper clip (Yes - No)",
+             "Rotor x leg-width interaction"),
+  estimate_seconds = coef(fit)[effect_names] * multipliers,
+  lower95 = ci[effect_names, 1] * multipliers,
+  upper95 = ci[effect_names, 2] * multipliers,
+  row.names = NULL
+)
+print(effects, row.names = FALSE)
+```
+
+## E. Interaction plot and model diagnostics
+
+```{r plots, eval=FALSE}
+interaction.plot(x.factor = d$rotor_cm, trace.factor = d$leg_width_cm,
+                 response = d$flight_time, fun = mean,
+                 xlab = "Rotor length (cm)", ylab = "Mean flight time (seconds)",
+                 trace.label = "Leg width (cm)")
+
+par(mfrow = c(1, 2))
+plot(fit, which = 1) # Residuals vs fitted
+plot(fit, which = 2) # Normal Q-Q
+par(mfrow = c(1, 1))
+```
+
+## F. Compare designs to support the recommendation
+
+```{r recommendation, eval=FALSE}
+# Ranking by raw observed means (and their condition-specific 95% CIs).
+print(cell[, c("rotor_cm", "leg_length_cm", "leg_width_cm", "paperclip",
+               "mean", "lower95", "upper95")], row.names = FALSE)
+
+# Model-predicted mean for each of the 16 tested combinations.
+newdesign <- unique(d[, c("rotor_cm", "leg_length_cm", "leg_width_cm",
+                          "paperclip", "R", "L", "W", "C")])
+pred <- predict(fit, newdata = newdesign, interval = "confidence",
+                level = 0.95)
+recommendations <- cbind(newdesign[, 1:4], as.data.frame(pred))
+recommendations <- recommendations[order(-recommendations$fit), ]
+print(recommendations, row.names = FALSE)
+```

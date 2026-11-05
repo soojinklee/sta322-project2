@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Seunghyun Jin and Soojin Lee">
+<meta name="dcterms.date" content="2026-12-04">
 
-<title>project2</title>
+<title>STA 322 — Project 2: Paper Helicopter Experiment</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -73,6 +75,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="project2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="project2_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -84,14 +115,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">project2</h1>
+<h1 class="title">STA 322 — Project 2: Paper Helicopter Experiment</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Seunghyun Jin and Soojin Lee </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 4, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -101,26 +144,210 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="quarto" class="level2">
-<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
-<p>Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <a href="https://quarto.org" class="uri">https://quarto.org</a>.</p>
+<section id="objective" class="level1">
+<h1>Objective</h1>
+<p>The goal of this randomized experiment is to identify which paper-helicopter design factors are associated with longer flight times, determine whether the effect of rotor length depends on leg width, and recommend a combination of factor settings that maximizes flight time. The response is <strong>flight time (seconds)</strong>, measured from release until the helicopter first touches the floor.</p>
 </section>
-<section id="running-code" class="level2">
-<h2 class="anchored" data-anchor-id="running-code">Running Code</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
+<section id="experimental-design" class="level1">
+<h1>Experimental Design</h1>
+<section id="factors-and-settings" class="level2">
+<h2 class="anchored" data-anchor-id="factors-and-settings">Factors and settings</h2>
+<p>We use the four factors and levels specified in the project instructions.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Factor</th>
+<th style="text-align: left;">Low (−1)</th>
+<th style="text-align: left;">High (+1)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Rotor length</td>
+<td style="text-align: left;">7.5 cm</td>
+<td style="text-align: left;">8.5 cm</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Leg length</td>
+<td style="text-align: left;">7.5 cm</td>
+<td style="text-align: left;">12.0 cm</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Leg width</td>
+<td style="text-align: left;">3.2 cm</td>
+<td style="text-align: left;">5.0 cm</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Paper clip</td>
+<td style="text-align: left;">No</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
+<p>We use a <strong><span class="math inline">\(2^4\)</span> full factorial design</strong>: all 16 combinations of the four factors. We will make <strong>four independently constructed helicopters for each combination</strong>, for <strong>64 helicopters and 64 flights total</strong>. Each helicopter will be flown once. Having independent helicopters at each condition allows construction variation to contribute to the uncertainty estimates and avoids treating repeated drops of a single helicopter as independent replicates.</p>
+<p><strong>Why this design?</strong> A full factorial design enables comparison of each factor at both levels while averaging over the other factors. It also permits estimation of the <strong>rotor length × leg width interaction</strong>, directly addressing the second research question. Four independent flights per combination follow the assignment’s recommended minimum. The design is balanced, so the factors are not confounded with one another.</p>
+</section>
+<section id="randomization-and-flight-procedure" class="level2">
+<h2 class="anchored" data-anchor-id="randomization-and-flight-procedure">Randomization and flight procedure</h2>
+<ol type="1">
+<li>Generate the 64-run schedule using the code in the appendix <strong>before</strong> making or dropping helicopters. Save it as <code>helicopter_schedule.csv</code>.</li>
+<li>Construct one helicopter for each row of the schedule using the assigned factor settings and the provided construction instructions. Label each helicopter with its <code>run_id</code>.</li>
+<li>Conduct the flights in the randomized <code>run_order</code> given in the schedule. Do not reorder runs based on the factor settings.</li>
+<li>Drop every helicopter from approximately <strong>6 feet</strong> above the same floor surface, using the same release technique and location. Keep paper type, paper weight, body length (2 cm), fold angles, paper-clip type, and timing method consistent.</li>
+<li>Record the elapsed time, in seconds, from release until first floor contact. Use the same stopwatch/timing procedure throughout. Record any deviations or unusual flight behavior in <code>notes</code>.</li>
+<li>Enter the flight times in the schedule and save the completed data as <strong><code>helicopter_data.csv</code></strong>. Do not delete observations just because a flight is unexpectedly short or long; document mishaps and any pre-specified criteria for excluding invalid trials.</li>
+</ol>
+<p><strong>Potential sources of error:</strong> small differences in construction, release technique, air currents, and stopwatch reaction time. Randomizing the run order helps distribute time-related influences across conditions; standardized construction and dropping help reduce variability. The experiment supports causal comparisons of the <strong>assigned factor levels under these testing conditions</strong>, not necessarily every possible helicopter design or drop height.</p>
+</section>
+</section>
+<section id="analysis-plan" class="level1">
+<h1>Analysis Plan</h1>
+<p>We will summarize the mean flight time for each of the 16 design combinations and calculate a 95% confidence interval for each condition mean. For the primary analysis, we will use a linear model with all four main effects and the <strong>rotor length × leg width</strong> interaction:</p>
+<p><span class="math display">\[
+Y_i = \beta_0 + \beta_R R_i + \beta_L L_i + \beta_W W_i +
+\beta_C C_i + \beta_{RW}(R_iW_i) + \varepsilon_i,
+\]</span></p>
+<p>where <span class="math inline">\(R,L,W,C\in\{-1,+1\}\)</span> code the factor levels and <span class="math inline">\(Y_i\)</span> is flight time in seconds. With this coding, a factor’s average <strong>high-minus-low effect</strong> is <span class="math inline">\(2\beta\)</span> for a main effect, and the difference in rotor effects between high and low leg width is <span class="math inline">\(4\beta_{RW}\)</span>. We will report these estimates with 95% confidence intervals and use the rotor-by-width interaction to answer Question 2. We will also inspect residual plots to assess the model’s constant-variance and approximate-normality assumptions.</p>
+<p>The specified model focuses on the main effects and the interaction requested in the assignment. If the diagnostics show substantial problems or other interactions appear important, we will discuss that limitation rather than treating the model as automatically adequate.</p>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<p><strong>Complete this section after collecting the flight-time data and running the code in the appendix. Do not insert invented values.</strong></p>
+<section id="question-1-which-factors-are-most-important-for-longer-flights" class="level2">
+<h2 class="anchored" data-anchor-id="question-1-which-factors-are-most-important-for-longer-flights">Question 1: Which factors are most important for longer flights?</h2>
+<p>[INSERT: A table of estimated high-minus-low main effects, their 95% confidence intervals, and a comparison of effect magnitudes. Explain which factors have the largest effects, their directions, and whether intervals include zero. Note that effects are averaged across the tested levels of the other factors; if the interaction is sizable, interpret the rotor effect separately by leg width.]</p>
+</section>
+<section id="question-2-does-the-effect-of-rotor-length-differ-by-leg-width" class="level2">
+<h2 class="anchored" data-anchor-id="question-2-does-the-effect-of-rotor-length-differ-by-leg-width">Question 2: Does the effect of rotor length differ by leg width?</h2>
+<p>[INSERT: The estimated difference-in-differences for rotor length × leg width, its 95% confidence interval, and an interpretation in seconds. State whether the interval includes zero. Include or discuss the interaction plot.]</p>
+</section>
+<section id="question-3-what-design-combination-do-we-recommend" class="level2">
+<h2 class="anchored" data-anchor-id="question-3-what-design-combination-do-we-recommend">Question 3: What design combination do we recommend?</h2>
+<p>[INSERT: The recommended rotor length, leg length, leg width, and paper-clip setting. Support the recommendation with the observed mean flight times for the best-performing combination(s), 95% confidence intervals, and the fitted-model predictions where useful. Explain any trade-off between observed and model-estimated performance and acknowledge uncertainty, especially when top designs are close.]</p>
+</section>
+<section id="model-diagnostics-and-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="model-diagnostics-and-limitations">Model diagnostics and limitations</h2>
+<p>[INSERT: Brief discussion of the residual-vs-fitted plot, normal Q–Q plot, outliers/unequal spread if any, timing error, and limitations of testing only two levels per factor. State whether your findings are reliable within the settings studied.]</p>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>[INSERT: A short paragraph directly answering all three project questions with numerical support, and state that the recommendation applies to the tested levels and drop procedure.]</p>
+</section>
+<section id="appendix-r-code" class="level1">
+<h1>Appendix: R Code</h1>
+<p>The code below first generates the randomized schedule. <strong>Run the schedule-generation chunk only once before data collection</strong>; running it again could replace the original randomization. Then fill in the <code>flight_time</code> column and save the file as <code>helicopter_data.csv</code>. The analysis chunks will run after that file is available in the same folder as this R Markdown file.</p>
+<section id="a.-generate-the-randomized-64-flight-schedule" class="level2">
+<h2 class="anchored" data-anchor-id="a.-generate-the-randomized-64-flight-schedule">A. Generate the randomized 64-flight schedule</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RUN ONCE, BEFORE DATA COLLECTION.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">322</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>conditions <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">rotor_cm =</span> <span class="fu">c</span>(<span class="fl">7.5</span>, <span class="fl">8.5</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">leg_length_cm =</span> <span class="fu">c</span>(<span class="fl">7.5</span>, <span class="dv">12</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">leg_width_cm =</span> <span class="fu">c</span>(<span class="fl">3.2</span>, <span class="dv">5</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">paperclip =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">replicate =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>conditions<span class="sc">$</span>run_id <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(conditions))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>conditions<span class="sc">$</span>run_order <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(conditions)))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>conditions<span class="sc">$</span>flight_time <span class="ot">&lt;-</span> <span class="cn">NA_real_</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>conditions<span class="sc">$</span>notes <span class="ot">&lt;-</span> <span class="st">""</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>conditions <span class="ot">&lt;-</span> conditions[<span class="fu">order</span>(conditions<span class="sc">$</span>run_order),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">c</span>(<span class="st">"run_order"</span>, <span class="st">"run_id"</span>, <span class="st">"rotor_cm"</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"leg_length_cm"</span>, <span class="st">"leg_width_cm"</span>, <span class="st">"paperclip"</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"replicate"</span>, <span class="st">"flight_time"</span>, <span class="st">"notes"</span>)]</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(conditions, <span class="st">"helicopter_schedule.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(conditions)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</div>
-<p>You can add options to executable code like this</p>
+</section>
+<section id="b.-read-and-check-the-completed-data" class="level2">
+<h2 class="anchored" data-anchor-id="b.-read-and-check-the-completed-data">B. Read and check the completed data</h2>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 4</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"helicopter_data.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nrow</span>(d) <span class="sc">==</span> <span class="dv">64</span>, <span class="sc">!</span><span class="fu">anyNA</span>(d<span class="sc">$</span>flight_time),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>          <span class="fu">is.numeric</span>(d<span class="sc">$</span>flight_time), <span class="fu">all</span>(d<span class="sc">$</span>flight_time <span class="sc">&gt;</span> <span class="dv">0</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">all</span>(<span class="fu">table</span>(<span class="fu">interaction</span>(d<span class="sc">$</span>rotor_cm, d<span class="sc">$</span>leg_length_cm,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                              d<span class="sc">$</span>leg_width_cm, d<span class="sc">$</span>paperclip)) <span class="sc">==</span> <span class="dv">4</span>))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Effects coding, using the levels given in the instructions.</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>R <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(d<span class="sc">$</span>rotor_cm <span class="sc">==</span> <span class="fl">8.5</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>L <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(d<span class="sc">$</span>leg_length_cm <span class="sc">==</span> <span class="dv">12</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>W <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(d<span class="sc">$</span>leg_width_cm <span class="sc">==</span> <span class="dv">5</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>C <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(d<span class="sc">$</span>paperclip <span class="sc">==</span> <span class="st">"Yes"</span>, <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+</section>
+<section id="c.-descriptive-statistics-and-95-confidence-intervals" class="level2">
+<h2 class="anchored" data-anchor-id="c.-descriptive-statistics-and-95-confidence-intervals">C. Descriptive statistics and 95% confidence intervals</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cell <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(flight_time <span class="sc">~</span> rotor_cm <span class="sc">+</span> leg_length_cm <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                    leg_width_cm <span class="sc">+</span> paperclip, <span class="at">data =</span> d,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">FUN =</span> <span class="cf">function</span>(x) <span class="fu">c</span>(<span class="at">n =</span> <span class="fu">length</span>(x), <span class="at">mean =</span> <span class="fu">mean</span>(x),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">sd =</span> <span class="fu">sd</span>(x)))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>cell <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(cell[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>], cell<span class="sc">$</span>flight_time)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>cell<span class="sc">$</span>se <span class="ot">&lt;-</span> cell<span class="sc">$</span>sd <span class="sc">/</span> <span class="fu">sqrt</span>(cell<span class="sc">$</span>n)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>cell<span class="sc">$</span>lower95 <span class="ot">&lt;-</span> cell<span class="sc">$</span>mean <span class="sc">-</span> <span class="fu">qt</span>(.<span class="dv">975</span>, <span class="at">df =</span> cell<span class="sc">$</span>n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> cell<span class="sc">$</span>se</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>cell<span class="sc">$</span>upper95 <span class="ot">&lt;-</span> cell<span class="sc">$</span>mean <span class="sc">+</span> <span class="fu">qt</span>(.<span class="dv">975</span>, <span class="at">df =</span> cell<span class="sc">$</span>n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> cell<span class="sc">$</span>se</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>cell <span class="ot">&lt;-</span> cell[<span class="fu">order</span>(<span class="sc">-</span>cell<span class="sc">$</span>mean), ]</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cell, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
+</section>
+<section id="d.-estimate-main-effects-and-rotor-by-width-interaction" class="level2">
+<h2 class="anchored" data-anchor-id="d.-estimate-main-effects-and-rotor-by-width-interaction">D. Estimate main effects and rotor-by-width interaction</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(flight_time <span class="sc">~</span> R <span class="sc">+</span> L <span class="sc">+</span> W <span class="sc">+</span> C <span class="sc">+</span> R<span class="sc">:</span>W, <span class="at">data =</span> d)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert regression coefficients to effects in seconds.</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># R, L, W, C: average high-minus-low differences (2 * coefficient).</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># R:W: difference of rotor effects (high width minus low width) (4 * coefficient).</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>coef_table <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit)<span class="sc">$</span>coefficients</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>ci <span class="ot">&lt;-</span> <span class="fu">confint</span>(fit, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>effect_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"R"</span>, <span class="st">"L"</span>, <span class="st">"W"</span>, <span class="st">"C"</span>, <span class="st">"R:W"</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>multipliers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>effects <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">effect =</span> <span class="fu">c</span>(<span class="st">"Rotor length (high - low)"</span>, <span class="st">"Leg length (high - low)"</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Leg width (high - low)"</span>, <span class="st">"Paper clip (Yes - No)"</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Rotor x leg-width interaction"</span>),</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate_seconds =</span> <span class="fu">coef</span>(fit)[effect_names] <span class="sc">*</span> multipliers,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower95 =</span> ci[effect_names, <span class="dv">1</span>] <span class="sc">*</span> multipliers,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper95 =</span> ci[effect_names, <span class="dv">2</span>] <span class="sc">*</span> multipliers,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names =</span> <span class="cn">NULL</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(effects, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="e.-interaction-plot-and-model-diagnostics" class="level2">
+<h2 class="anchored" data-anchor-id="e.-interaction-plot-and-model-diagnostics">E. Interaction plot and model diagnostics</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">interaction.plot</span>(<span class="at">x.factor =</span> d<span class="sc">$</span>rotor_cm, <span class="at">trace.factor =</span> d<span class="sc">$</span>leg_width_cm,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">response =</span> d<span class="sc">$</span>flight_time, <span class="at">fun =</span> mean,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">xlab =</span> <span class="st">"Rotor length (cm)"</span>, <span class="at">ylab =</span> <span class="st">"Mean flight time (seconds)"</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trace.label =</span> <span class="st">"Leg width (cm)"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">1</span>) <span class="co"># Residuals vs fitted</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">2</span>) <span class="co"># Normal Q-Q</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="f.-compare-designs-to-support-the-recommendation" class="level2">
+<h2 class="anchored" data-anchor-id="f.-compare-designs-to-support-the-recommendation">F. Compare designs to support the recommendation</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ranking by raw observed means (and their condition-specific 95% CIs).</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cell[, <span class="fu">c</span>(<span class="st">"rotor_cm"</span>, <span class="st">"leg_length_cm"</span>, <span class="st">"leg_width_cm"</span>, <span class="st">"paperclip"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>               <span class="st">"mean"</span>, <span class="st">"lower95"</span>, <span class="st">"upper95"</span>)], <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Model-predicted mean for each of the 16 tested combinations.</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>newdesign <span class="ot">&lt;-</span> <span class="fu">unique</span>(d[, <span class="fu">c</span>(<span class="st">"rotor_cm"</span>, <span class="st">"leg_length_cm"</span>, <span class="st">"leg_width_cm"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"paperclip"</span>, <span class="st">"R"</span>, <span class="st">"L"</span>, <span class="st">"W"</span>, <span class="st">"C"</span>)])</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit, <span class="at">newdata =</span> newdesign, <span class="at">interval =</span> <span class="st">"confidence"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>recommendations <span class="ot">&lt;-</span> <span class="fu">cbind</span>(newdesign[, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>], <span class="fu">as.data.frame</span>(pred))</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>recommendations <span class="ot">&lt;-</span> recommendations[<span class="fu">order</span>(<span class="sc">-</span>recommendations<span class="sc">$</span>fit), ]</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(recommendations, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
 </section>
 
 </main>
