@@ -133,7 +133,7 @@ Therefore, **this is our recommended design among the 16 combinations tested**, 
 
 The residual-vs-fitted plot for the initial model showed a curved pattern, suggesting that important interactions were omitted. Comparing this model with the full factorial model confirmed a significant improvement in fit ($F(10,48) = 26.88$, $p < 0.001$). The largest omitted interactions involved leg length × leg width, rotor length × leg length, leg length × paper clip, and leg width × paper clip. We therefore used the full factorial model for our final analysis, which estimates a separate mean for each experimental condition.
 
-The initial model had a residual standard deviation of 0.145 seconds, compared with 0.062 seconds for the full factorial model, indicating substantially improved fit. This indicates that including the additional interactions substantially improved model fit. However, within-condition standard deviations ranged from 0.013 to 0.103 seconds, suggesting some variation in residual spread across designs and a possible violation of the constant-variance assumption.
+The initial model had a residual standard deviation of 0.145 seconds, compared with 0.062 seconds for the full factorial model, indicating that including additional interactions substantially improved model fit. However, within-condition standard deviations ranged from 0.013 to 0.103 seconds, suggesting some variation in residual spread across designs and a possible violation of the constant-variance assumption.
 
 Other limitations include potential differences in construction, release technique, and stopwatch timing, which may introduce measurement variability. Additionally, only two levels of each factor were tested, so we cannot determine whether settings outside these ranges would produce longer flight times. Therefore, our conclusions and recommended design apply only to the experimental conditions studied.
 
@@ -249,7 +249,7 @@ knitr::kable(
 )
 ```
 
-## E.Model diagnostics
+## E. Model diagnostics
 
 ```{r model-diagnostics}
 #| fig-width: 8
