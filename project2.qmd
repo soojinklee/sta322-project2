@@ -1,11 +1,16 @@
 ---
 title: "STA 322 — Project 2: Paper Helicopter Experiment"
-author: "Seunghyun Jin and Soojin Lee"
+author:
+  - "Seunghyun Jin"
+  - "Soojin Lee"
 date: "December 4, 2026"
-output:
-  html_document:
-    toc: true
-    number_sections: true
+format:
+  pdf:
+    number-sections: true
+    toc: false
+execute:
+  warning: false
+  message: false
 ---
 
 # Objective
