@@ -55,31 +55,56 @@ The specified model focuses on the main effects and the interaction requested in
 
 # Results
 
-**Complete this section after collecting the flight-time data and running the code in the appendix. Do not insert invented values.**
+All results below come from the 64 flights in `helicopter_data.csv` and the code in the appendix.
 
 ## Question 1: Which factors are most important for longer flights?
 
-[INSERT: A table of estimated high-minus-low main effects, their 95% confidence intervals, and a comparison of effect magnitudes. Explain which factors have the largest effects, their directions, and whether intervals include zero. Note that effects are averaged across the tested levels of the other factors; if the interaction is sizable, interpret the rotor effect separately by leg width.]
+| Effect (high minus low) | Estimate (s) | 95% CI (s) |
+|:--|--:|:--|
+| Paper clip (Yes − No) | −0.232 | (−0.304, −0.159) |
+| Leg length (12.0 − 7.5 cm) | −0.185 | (−0.258, −0.112) |
+| Rotor length (8.5 − 7.5 cm) | −0.090 | (−0.163, −0.017) |
+| Leg width (5.0 − 3.2 cm) | −0.016 | (−0.089, 0.056) |
+
+The paper clip has the largest effect. Adding it shortens flights by about 0.23 seconds on average, which is roughly 17% of the overall mean flight time of 1.36 seconds. Longer legs are second, cutting flight time by about 0.19 seconds. The longer rotor reduces flight time by about 0.09 seconds. All three intervals lie entirely below zero, so each of these factors is associated with shorter flights when set high. Leg width has almost no average effect: the estimate is −0.016 seconds and the interval includes zero.
+
+Every factor that matters points the same way: the low setting gives longer flights. These are averages over the tested levels of the other factors. The rotor-by-width interaction is close to zero (Question 2), so the rotor effect does not need to be split by leg width. Other interactions are present, though (see Model diagnostics), so the size of each effect depends on the other settings.
 
 ## Question 2: Does the effect of rotor length differ by leg width?
 
-[INSERT: The estimated difference-in-differences for rotor length × leg width, its 95% confidence interval, and an interpretation in seconds. State whether the interval includes zero. Include or discuss the interaction plot.]
+At a leg width of 3.2 cm, moving from a 7.5 cm to an 8.5 cm rotor changes mean flight time from 1.414 to 1.327 seconds, a change of −0.088 seconds. At a leg width of 5.0 cm, the same change goes from 1.401 to 1.308 seconds, a change of −0.093 seconds. The difference-in-differences is **−0.005 seconds, 95% CI (−0.150, 0.140)**. The interval includes zero and is centered almost exactly on it.
+
+The two lines in the interaction plot are nearly parallel and both slope downward. We find no evidence that the effect of rotor length depends on leg width. The longer rotor shortens flights by about 0.09 seconds at either width.
 
 ## Question 3: What design combination do we recommend?
 
-[INSERT: The recommended rotor length, leg length, leg width, and paper-clip setting. Support the recommendation with the observed mean flight times for the best-performing combination(s), 95% confidence intervals, and the fitted-model predictions where useful. Explain any trade-off between observed and model-estimated performance and acknowledge uncertainty, especially when top designs are close.]
+We recommend a **7.5 cm rotor, 7.5 cm legs, 3.2 cm leg width, and no paper clip**.
+
+| Rotor | Leg length | Leg width | Clip | Observed mean (s) | 95% CI | Model prediction (s) | 95% CI |
+|:--|:--|:--|:--|--:|:--|--:|:--|
+| 7.5 | 7.5 | 3.2 | No | 1.860 | (1.821, 1.899) | 1.623 | (1.534, 1.712) |
+| 7.5 | 7.5 | 5.0 | No | 1.615 | (1.510, 1.720) | 1.609 | (1.520, 1.698) |
+| 8.5 | 7.5 | 5.0 | No | 1.530 | (1.384, 1.676) | 1.517 | (1.428, 1.605) |
+
+This combination had the longest observed mean flight time, 1.860 seconds, and the smallest spread of any design (SD 0.024 s). Its interval does not overlap the interval for the second-best design (1.615 s), so the lead of about 0.25 seconds is clear. It also sets every factor with a meaningful effect to its better level, which agrees with Question 1.
+
+The fitted model also ranks this combination first, at 1.623 seconds, but only by 0.014 seconds over the same design with wide legs. The model underestimates the best design by about 0.24 seconds because it leaves out interactions that the data show are important, especially leg length × leg width. Narrow legs help a lot when legs are short but not when legs are long, and the main-effects model averages that away. For the recommendation we rely on the observed means, which do not depend on the model being correct, and use the model mainly to confirm the direction of each factor.
 
 ## Model diagnostics and limitations
 
-[INSERT: Brief discussion of the residual-vs-fitted plot, normal Q–Q plot, outliers/unequal spread if any, timing error, and limitations of testing only two levels per factor. State whether your findings are reliable within the settings studied.]
+The residual-vs-fitted plot shows a curved pattern: residuals are mostly positive at the lowest and highest fitted values and negative in the middle. Residuals also cluster by design, since all four flights of a combination miss the fitted value in the same direction. This means the specified model leaves out real structure. Comparing it with a model that includes all interactions confirms this (F = 26.9 on 10 and 48 df, p < 0.001). The largest omitted terms are leg length × leg width, rotor length × leg length, leg length × paper clip, and leg width × paper clip. As a result, the model's residual standard deviation (0.145 s) is much larger than the variation between flights of the same design (about 0.054 s). The confidence intervals for the main effects are therefore wider than they need to be, but the directions of the clip, leg length, and rotor effects are unaffected.
+
+The normal Q–Q plot is close to a straight line, with a slightly heavy lower tail. The most negative residuals (standardized near −2 to −2.7) all come from the 7.5 / 12.0 / 3.2 / No design. The model predicts about 1.44 seconds for it, but it flew about 1.14 seconds, which is again the leg length × leg width interaction. A Shapiro–Wilk test does not reject normality (p = 0.10). Spread differs somewhat across designs (within-design SDs range from 0.013 to 0.103 s), with wider designs tending to vary more.
+
+Timing error is a real limitation. Stopwatch reaction time can be 0.1 to 0.2 seconds, which is large relative to flights of 1.0 to 1.9 seconds and comparable in size to the rotor effect. Because the runs were randomized, this error should add noise rather than bias. We also tested only two levels per factor, so we cannot say whether a shorter rotor, shorter legs, or a narrower width would do even better, or whether the relationships are linear between the tested levels. Within the settings studied, the conclusions about the paper clip, leg length, and the recommended design are reliable. The rotor effect is smaller and less certain.
 
 # Conclusion
 
-[INSERT: A short paragraph directly answering all three project questions with numerical support, and state that the recommendation applies to the tested levels and drop procedure.]
+The paper clip and leg length are the most important factors for flight time. Adding a paper clip shortens flights by about 0.23 seconds (95% CI 0.16 to 0.30), and 12 cm legs shorten them by about 0.19 seconds (95% CI 0.11 to 0.26) compared with 7.5 cm legs. The 8.5 cm rotor reduces flight time by a smaller 0.09 seconds (95% CI 0.02 to 0.16), and leg width has no clear average effect. The effect of rotor length does not depend on leg width: the difference-in-differences is −0.005 seconds with a 95% CI of (−0.150, 0.140). We recommend a 7.5 cm rotor, 7.5 cm legs, 3.2 cm leg width, and no paper clip. This design had the longest observed mean flight time, 1.860 seconds (95% CI 1.821 to 1.899), about 0.25 seconds longer than any other design. This recommendation applies only to the tested levels and to our drop procedure from about 6 feet.
 
 # Appendix: R Code
 
-The code below first generates the randomized schedule. **Run the schedule-generation chunk only once before data collection**; running it again could replace the original randomization. Then fill in the `flight_time` column and save the file as `helicopter_data.csv`. The analysis chunks will run after that file is available in the same folder as this R Markdown file.
+The code below first generates the randomized schedule. **Run the schedule-generation chunk only once before data collection**; running it again could replace the original randomization. Then fill in the `flight_time` column and save the file as `helicopter_data.csv`. The analysis chunks will run after that file is available in the same folder as this Quarto document.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
@@ -111,7 +136,7 @@ print(conditions)
 
 ## B. Read and check the completed data
 
-```{r load-data, eval=FALSE}
+```{r load-data}
 d <- read.csv("helicopter_data.csv", stringsAsFactors = FALSE)
 stopifnot(nrow(d) == 64, !anyNA(d$flight_time),
           is.numeric(d$flight_time), all(d$flight_time > 0))
@@ -127,7 +152,7 @@ d$C <- ifelse(d$paperclip == "Yes", 1, -1)
 
 ## C. Descriptive statistics and 95% confidence intervals
 
-```{r descriptive-results, eval=FALSE}
+```{r descriptive-results}
 cell <- aggregate(flight_time ~ rotor_cm + leg_length_cm +
                     leg_width_cm + paperclip, data = d,
                   FUN = function(x) c(n = length(x), mean = mean(x),
@@ -142,7 +167,7 @@ print(cell, row.names = FALSE)
 
 ## D. Estimate main effects and rotor-by-width interaction
 
-```{r model-results, eval=FALSE}
+```{r model-results}
 fit <- lm(flight_time ~ R + L + W + C + R:W, data = d)
 summary(fit)
 
@@ -167,7 +192,7 @@ print(effects, row.names = FALSE)
 
 ## E. Interaction plot and model diagnostics
 
-```{r plots, eval=FALSE}
+```{r plots}
 interaction.plot(x.factor = d$rotor_cm, trace.factor = d$leg_width_cm,
                  response = d$flight_time, fun = mean,
                  xlab = "Rotor length (cm)", ylab = "Mean flight time (seconds)",
@@ -181,7 +206,7 @@ par(mfrow = c(1, 1))
 
 ## F. Compare designs to support the recommendation
 
-```{r recommendation, eval=FALSE}
+```{r recommendation}
 # Ranking by raw observed means (and their condition-specific 95% CIs).
 print(cell[, c("rotor_cm", "leg_length_cm", "leg_width_cm", "paperclip",
                "mean", "lower95", "upper95")], row.names = FALSE)
