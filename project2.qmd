@@ -184,7 +184,7 @@ stopifnot(nrow(d) == 64, !anyNA(d$flight_time),
 stopifnot(all(table(interaction(d$rotor_cm, d$leg_length_cm,
                               d$leg_width_cm, d$paperclip)) == 4))
 
-# Effects coding, using the levels given in the instructions.
+# Effects coding, using the levels given in the instructions
 d$R <- ifelse(d$rotor_cm == 8.5, 1, -1)
 d$L <- ifelse(d$leg_length_cm == 12, 1, -1)
 d$W <- ifelse(d$leg_width_cm == 5, 1, -1)
@@ -208,22 +208,21 @@ cell <- cell[order(-cell$mean), ]
 ## D. Estimate main effects and rotor-by-width interaction
 
 ```{r model-results}
-# Initial model
+# initial model
 fit_initial <- lm(
   flight_time ~ R + L + W + C + R:W,
   data = d
 )
 
-# Full factorial model
+# full factorial model
 fit <- lm(
   flight_time ~ R * L * W * C,
   data = d
 )
 
-# Compare models
 anova(fit_initial, fit)
 
-# Calculate main effects and interaction
+# calculate main effects and interaction
 effect_names <- c("R", "L", "W", "C", "R:W")
 multipliers <- c(2, 2, 2, 2, 4)
 
@@ -269,7 +268,6 @@ par(mfrow = c(1, 1))
 # Normal Q-Q plot for final model
 plot(fit, which = 2)
 
-# Compare residual standard deviations
 sigma(fit_initial)
 sigma(fit)
 ```
@@ -278,7 +276,6 @@ sigma(fit)
 
 
 ```{r recommendation}
-# Rank the 16 designs by observed mean
 cell <- cell[order(-cell$mean), ]
 
 # Show the three highest-mean designs
